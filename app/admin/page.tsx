@@ -43,6 +43,34 @@ export default async function AdminPage() {
     .select('*', { count: 'exact', head: true })
     .eq('role', 'driver')
 
+  // Get total rides count
+  const { count: totalRides } = await supabase
+    .from('rides')
+    .select('*', { count: 'exact', head: true })
+
+  // Get completed rides for revenue calculation
+  const { data: completedRides } = await supabase
+    .from('rides')
+    .select('final_cost, estimated_cost')
+    .eq('status', 'completed')
+
+  // Calculate total revenue
+  const totalRevenue = completedRides?.reduce((sum, ride) => {
+    return sum + (ride.final_cost || ride.estimated_cost || 0)
+  }, 0) || 0
+
+  // Get pending rides count
+  const { count: pendingRides } = await supabase
+    .from('rides')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending')
+
+  // Get verified drivers count
+  const { count: verifiedDrivers } = await supabase
+    .from('driver_profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('profile_verified', true)
+
   async function signOut() {
     'use server'
     const supabase = await createClient()
@@ -75,27 +103,145 @@ export default async function AdminPage() {
 
         {/* Stats Overview */}
         <div className="grid md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="text-sm text-gray-600 mb-1">Total Users</div>
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-600">Total Users</div>
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </div>
+            </div>
             <div className="text-3xl font-bold text-gray-900">{totalUsers || 0}</div>
             <div className="text-xs text-gray-500 mt-1">All registered users</div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="text-sm text-gray-600 mb-1">Active Drivers</div>
-            <div className="text-3xl font-bold text-gray-900">{totalDrivers || 0}</div>
-            <div className="text-xs text-gray-500 mt-1">Registered drivers</div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-600">Verified Drivers</div>
+              <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-gray-900">{verifiedDrivers || 0}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {totalDrivers || 0} total drivers
+            </div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="text-sm text-gray-600 mb-1">Total Rides</div>
-            <div className="text-3xl font-bold text-gray-900">0</div>
-            <div className="text-xs text-gray-500 mt-1">Coming soon</div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-600">Total Rides</div>
+              <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-gray-900">{totalRides || 0}</div>
+            <div className="text-xs text-gray-500 mt-1">
+              {pendingRides || 0} pending requests
+            </div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="text-sm text-gray-600 mb-1">Revenue</div>
-            <div className="text-3xl font-bold text-gray-900">₹0</div>
-            <div className="text-xs text-gray-500 mt-1">Coming soon</div>
+
+          <div className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-sm text-gray-600">Total Revenue</div>
+              <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-gray-900">
+              ₹{totalRevenue.toFixed(2)}
+            </div>
+            <div className="text-xs text-gray-500 mt-1">
+              From completed rides
+            </div>
           </div>
         </div>
+
+        {/* Ride Statistics Breakdown */}
+        {totalRides && totalRides > 0 ? (
+          <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Ride Statistics</h2>
+            <div className="grid md:grid-cols-5 gap-6">
+              <div className="text-center">
+                <div className="text-3xl font-bold text-blue-600">
+                  {totalRides || 0}
+                </div>
+               <div className="text-sm text-gray-600 mt-1">Total Rides</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-amber-600">
+                  {pendingRides || 0}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">Pending</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-indigo-600">
+                  {completedRides?.length || 0}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">Completed</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-green-600">
+                  ₹{totalRevenue.toFixed(2)}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">Revenue</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl font-bold text-purple-600">
+                  ₹{completedRides?.length ? (totalRevenue / completedRides.length).toFixed(2) : '0.00'}
+                </div>
+                <div className="text-sm text-gray-600 mt-1">Avg per Ride</div>
+              </div>
+            </div>
+          </div>
+        ) : null}
 
         {/* Management Sections */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
