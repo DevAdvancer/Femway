@@ -25,7 +25,7 @@ export default function Navbar() {
                 </svg>
               </div>
               <span className="text-xl font-bold text-gray-900">
-                Girl Car Booking
+                Femway
               </span>
             </Link>
           </div>

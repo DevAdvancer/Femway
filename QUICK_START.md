@@ -4,9 +4,9 @@
 
 | Role | Email | Password |
 |------|-------|----------|
-| **Admin** | admin@bookingapp.com | Admin@123456 |
-| **Driver** | driver@bookingapp.com | Driver@123456 |
-| **Passenger** | passenger@bookingapp.com | Passenger@123456 |
+| **Admin** | admin@femway.com | Admin@123456 |
+| **Driver** | driver@femway.com | Driver@123456 |
+| **Passenger** | passenger@femway.com | Passenger@123456 |
 
 **Admin Code**: ADMIN-2024-DEMO
 

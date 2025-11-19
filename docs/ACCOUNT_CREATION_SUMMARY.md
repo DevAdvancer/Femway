@@ -2,7 +2,7 @@
 
 ## What Was Created
 
-I've set up a complete system for creating and managing sample test accounts for your booking application.
+I've set up a complete system for creating and managing sample test accounts for Femway.
 
 ## Files Created
 
@@ -21,9 +21,9 @@ I've set up a complete system for creating and managing sample test accounts for
 
 | Role | Email | Password | Special Requirements |
 |------|-------|----------|---------------------|
-| Admin | admin@bookingapp.com | Admin@123456 | Needs admin code: ADMIN-2024-DEMO |
-| Driver | driver@bookingapp.com | Driver@123456 | Needs to upload 6 documents |
-| Passenger | passenger@bookingapp.com | Passenger@123456 | Ready to use immediately |
+| Admin | admin@femway.com | Admin@123456 | Needs admin code: ADMIN-2024-DEMO |
+| Driver | driver@femway.com | Driver@123456 | Needs to upload 6 documents |
+| Passenger | passenger@femway.com | Passenger@123456 | Ready to use immediately |
 
 ## How to Create Accounts
 

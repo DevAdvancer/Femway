@@ -134,7 +134,7 @@ export default function Home() {
               About Our Service
             </h2>
             <p className="text-lg text-gray-600 mb-6">
-              Girl Car Booking is dedicated to providing safe, comfortable, and reliable
+              Femway is dedicated to providing safe, comfortable, and reliable
               transportation services specifically designed for women. We understand the
               unique safety concerns and have built our service from the ground up with
               women's security as our top priority.

@@ -96,7 +96,7 @@ if (expiringSoon) {
 - Balances security with user convenience
 - Reduces risk of session hijacking
 - Complies with common security best practices
-- Appropriate for a booking application
+- Appropriate for a ride booking application
 
 ### Token Validation
 - Always use `getUser()` on server-side (validates JWT)

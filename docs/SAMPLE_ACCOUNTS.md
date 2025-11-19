@@ -1,20 +1,20 @@
 # Sample Accounts Setup Guide
 
-This guide will help you create test accounts for all three roles in the booking application.
+This guide will help you create test accounts for all three roles in Femway.
 
 ## Recommended Test Credentials
 
 ### Admin Account
-- **Email**: admin@bookingapp.com
+- **Email**: admin@femway.com
 - **Password**: Admin@123456
 - **Admin Code**: ADMIN-2024-DEMO
 
 ### Driver Account
-- **Email**: driver@bookingapp.com
+- **Email**: driver@femway.com
 - **Password**: Driver@123456
 
 ### Passenger Account
-- **Email**: passenger@bookingapp.com
+- **Email**: passenger@femway.com
 - **Password**: Passenger@123456
 
 ---
@@ -26,7 +26,7 @@ This guide will help you create test accounts for all three roles in the booking
 **Step 1: Create Passenger Account**
 1. Navigate to `/signup` in your browser
 2. Fill in the form:
-   - Email: `passenger@bookingapp.com`
+   - Email: `passenger@femway.com`
    - Password: `Passenger@123456`
    - Role: Select **Passenger**
 3. Click "Sign Up"
@@ -36,7 +36,7 @@ This guide will help you create test accounts for all three roles in the booking
 1. Sign out from the passenger account
 2. Navigate to `/signup`
 3. Fill in the form:
-   - Email: `driver@bookingapp.com`
+   - Email: `driver@femway.com`
    - Password: `Driver@123456`
    - Role: Select **Driver**
 4. Click "Sign Up"
@@ -47,7 +47,7 @@ This guide will help you create test accounts for all three roles in the booking
 1. Sign out from the driver account
 2. Navigate to `/signup`
 3. Fill in the form:
-   - Email: `admin@bookingapp.com`
+   - Email: `admin@femway.com`
    - Password: `Admin@123456`
    - Role: Select **Admin**
    - Admin Code: `ADMIN-2024-DEMO`
@@ -67,7 +67,7 @@ node scripts/create-sample-accounts.js
 ## Using the Sample Accounts
 
 ### Admin Dashboard (`/admin`)
-**Login**: admin@bookingapp.com / Admin@123456
+**Login**: admin@femway.com / Admin@123456
 
 Features:
 - View all drivers and their verification status
@@ -77,7 +77,7 @@ Features:
 - Manage admin codes
 
 ### Driver Dashboard (`/driver`)
-**Login**: driver@bookingapp.com / Driver@123456
+**Login**: driver@femway.com / Driver@123456
 
 Features:
 - Upload verification documents (6 required):
@@ -93,7 +93,7 @@ Features:
 - View ride history and earnings
 
 ### Passenger Dashboard (`/passengers`)
-**Login**: passenger@bookingapp.com / Passenger@123456
+**Login**: passenger@femway.com / Passenger@123456
 
 Features:
 - Book rides with pickup and dropoff locations
