@@ -4,6 +4,7 @@ import { useState, useRef } from 'react'
 import { uploadDocument } from '@/app/driver/actions'
 import type { DocumentType } from '@/lib/types/driver'
 import { MAX_FILE_SIZE, ALLOWED_FILE_EXTENSIONS, DOCUMENT_LABELS } from '@/lib/types/driver'
+import LoadingSpinner from '@/components/loading-spinner'
 
 interface DocumentUploadProps {
   userId: string
@@ -151,8 +152,8 @@ export default function DocumentUpload({
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-lg">
             <div className="flex flex-col items-center">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-              <p className="mt-2 text-sm text-gray-600">Uploading...</p>
+              <LoadingSpinner size="lg" color="purple" />
+              <p className="mt-3 text-sm text-gray-600 font-medium">Uploading...</p>
             </div>
           </div>
         )}

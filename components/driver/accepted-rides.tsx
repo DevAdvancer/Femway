@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import type { Ride } from '@/lib/types/ride'
+import LoadingSpinner from '@/components/loading-spinner'
 
 interface AcceptedRidesProps {
   rides: Ride[]
@@ -174,9 +175,16 @@ export default function AcceptedRides({ rides, onComplete, onCancel, processing 
                   <button
                     onClick={() => handleComplete(ride.id)}
                     disabled={processing === ride.id}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
                   >
-                    {processing === ride.id ? 'Completing...' : 'Confirm Complete'}
+                    {processing === ride.id ? (
+                      <>
+                        <LoadingSpinner size="sm" />
+                        <span>Completing...</span>
+                      </>
+                    ) : (
+                      'Confirm Complete'
+                    )}
                   </button>
                   <button
                     onClick={() => setSelectedRide(null)}
@@ -202,9 +210,16 @@ export default function AcceptedRides({ rides, onComplete, onCancel, processing 
                 <button
                   onClick={() => onCancel(ride.id)}
                   disabled={processing === ride.id}
-                  className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                  className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
                 >
-                  {processing === ride.id ? 'Cancelling...' : 'Cancel Ride'}
+                  {processing === ride.id ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>
+                      <span>Cancelling...</span>
+                    </>
+                  ) : (
+                    'Cancel Ride'
+                  )}
                 </button>
               </div>
             )}

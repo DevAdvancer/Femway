@@ -40,6 +40,24 @@ body {
   animation: slide-in 0.3s ease-out;
 }
 
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Button cursor styling */
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 /* Placeholder color styling */
 input::placeholder,
 textarea::placeholder,

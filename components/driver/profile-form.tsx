@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { upsertDriverProfile } from '@/app/driver/actions'
 import type { DriverProfile } from '@/lib/types/driver'
+import LoadingSpinner from '@/components/loading-spinner'
 
 interface ProfileFormProps {
   userId: string
@@ -179,31 +180,13 @@ export default function ProfileForm({ userId, initialData, onSave }: ProfileForm
         <button
           type="submit"
           disabled={saving}
-          className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {saving ? (
-            <span className="flex items-center justify-center">
-              <svg
-                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-              Saving...
-            </span>
+            <>
+              <LoadingSpinner size="sm" color="white" />
+              <span>Saving...</span>
+            </>
           ) : (
             'Save Profile'
           )}

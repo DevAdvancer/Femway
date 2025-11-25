@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { signupAction } from './actions'
+import LoadingSpinner from '@/components/loading-spinner'
 
 type UserRole = 'passenger' | 'driver' | 'admin'
 
@@ -20,11 +21,17 @@ export default function SignupPage() {
 
       if (result?.error) {
         setError(result.error)
+        setLoading(false)
       }
+      // If no error, redirect is happening - keep loading state
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.')
-    } finally {
-      setLoading(false)
+      // Only show error if it's not a redirect
+      const errorMessage = err instanceof Error ? err.message : ''
+      if (!errorMessage.includes('NEXT_REDIRECT')) {
+        setError('An unexpected error occurred. Please try again.')
+        setLoading(false)
+      }
+      // If it's a redirect error, keep loading state and let redirect happen
     }
   }
 
@@ -124,9 +131,16 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              {loading ? 'Creating account...' : 'Sign up'}
+              {loading ? (
+                <>
+                  <LoadingSpinner size="sm" />
+                  <span>Creating account...</span>
+                </>
+              ) : (
+                'Sign up'
+              )}
             </button>
           </div>
 

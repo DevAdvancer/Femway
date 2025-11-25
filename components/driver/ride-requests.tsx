@@ -1,6 +1,7 @@
 'use client'
 
 import type { Ride } from '@/lib/types/ride'
+import LoadingSpinner from '@/components/loading-spinner'
 
 interface RideRequestsProps {
   rides: Ride[]
@@ -126,16 +127,30 @@ export default function RideRequests({ rides, onAccept, onReject, processing }: 
               <button
                 onClick={() => onAccept(ride.id)}
                 disabled={processing === ride.id}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
               >
-                {processing === ride.id ? 'Accepting...' : 'Accept'}
+                {processing === ride.id ? (
+                  <>
+                    <LoadingSpinner size="sm" />
+                    <span>Accepting...</span>
+                  </>
+                ) : (
+                  'Accept'
+                )}
               </button>
               <button
                 onClick={() => onReject(ride.id)}
                 disabled={processing === ride.id}
-                className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium flex items-center justify-center gap-2"
               >
-                {processing === ride.id ? 'Rejecting...' : 'Reject'}
+                {processing === ride.id ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>
+                    <span>Rejecting...</span>
+                  </>
+                ) : (
+                  'Reject'
+                )}
               </button>
             </div>
           </div>

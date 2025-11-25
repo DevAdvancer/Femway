@@ -1,6 +1,7 @@
 'use client'
 
 import type { Ride } from '@/lib/types/ride'
+import LoadingSpinner from '@/components/loading-spinner'
 
 interface RideHistoryProps {
   rides: Ride[]
@@ -133,9 +134,16 @@ export default function RideHistory({ rides, onCancel, cancelling }: RideHistory
               <button
                 onClick={() => onCancel(ride.id)}
                 disabled={cancelling === ride.id}
-                className="w-full mt-3 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
+                className="w-full mt-3 px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium flex items-center justify-center gap-2"
               >
-                {cancelling === ride.id ? 'Cancelling...' : 'Cancel Ride'}
+                {cancelling === ride.id ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>
+                    <span>Cancelling...</span>
+                  </>
+                ) : (
+                  'Cancel Ride'
+                )}
               </button>
             )}
           </div>
