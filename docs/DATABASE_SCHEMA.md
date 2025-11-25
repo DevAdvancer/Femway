@@ -176,7 +176,9 @@ The database consists of 6 main tables and 1 view:
 | `petrol_price_per_liter` | numeric | NO | `0` | Current petrol price (₹/liter) |
 | `price_per_km` | numeric | NO | `0` | Base price per kilometer (₹/km) |
 | `driver_cost_per_ride` | numeric | NO | `0` | Fixed driver cost per ride (₹) |
-| `office_time_price_multiplier` | numeric | NO | `1.0` | Multiplier for office hours (9 AM - 6 PM) |
+| `office_time_price_multiplier` | numeric | NO | `1.0` | Multiplier for office hours |
+| `office_hours_start` | time | YES | `09:00:00` | Start time for office hours (24-hour format) |
+| `office_hours_end` | time | YES | `18:00:00` | End time for office hours (24-hour format) |
 | `updated_by` | uuid | YES | - | Foreign key to `auth.users.id` (admin) |
 | `created_at` | timestamptz | YES | `now()` | Settings creation timestamp |
 | `updated_at` | timestamptz | YES | `now()` | Last update timestamp |
@@ -190,6 +192,8 @@ The database consists of 6 main tables and 1 view:
 - `price_per_km`: ₹12.00
 - `driver_cost_per_ride`: ₹50.00
 - `office_time_price_multiplier`: 1.5
+- `office_hours_start`: 09:00:00
+- `office_hours_end`: 18:00:00
 
 **Pricing Formula**:
 ```
@@ -197,7 +201,9 @@ base_cost = (distance_km × price_per_km) + driver_cost_per_ride
 total_cost = base_cost × office_time_multiplier (if during office hours)
 ```
 
-**Office Hours**: 9:00 AM - 6:00 PM (Monday - Friday)
+**Office Hours**: Configurable via admin panel (Default: 9:00 AM - 6:00 PM, Monday - Friday)
+- Office hours range can be customized by admins
+- Multiplier is applied only during weekdays (Monday-Friday) within the configured time range
 
 ---
 

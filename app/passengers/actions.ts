@@ -40,11 +40,19 @@ export async function calculateRideCost(
     const pricing = await getPricingSettings()
     if (!pricing) return null
 
-    // Check if current time is office hours (9 AM - 6 PM, Monday-Friday)
+    // Check if current time is within configured office hours (Monday-Friday)
     const now = new Date()
     const day = now.getDay() // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    const hour = now.getHours()
-    const isOfficeHours = day >= 1 && day <= 5 && hour >= 9 && hour < 18
+    const currentTime = now.toTimeString().substring(0, 5) // HH:MM format
+
+    // Parse office hours (format: HH:MM:SS)
+    const startTime = pricing.office_hours_start?.substring(0, 5) || '09:00'
+    const endTime = pricing.office_hours_end?.substring(0, 5) || '18:00'
+
+    // Check if it's a weekday and within office hours
+    const isWeekday = day >= 1 && day <= 5
+    const isWithinTimeRange = currentTime >= startTime && currentTime < endTime
+    const isOfficeHours = isWeekday && isWithinTimeRange
 
     const base_cost = distance_km * pricing.price_per_km
     const driver_cost = pricing.driver_cost_per_ride

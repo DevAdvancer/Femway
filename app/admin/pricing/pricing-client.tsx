@@ -23,6 +23,12 @@ export default function PricingManagementClient({
   const [officeTimeMultiplier, setOfficeTimeMultiplier] = useState(
     initialSettings?.office_time_price_multiplier.toString() || '1'
   )
+  const [officeHoursStart, setOfficeHoursStart] = useState(
+    initialSettings?.office_hours_start?.substring(0, 5) || '09:00'
+  )
+  const [officeHoursEnd, setOfficeHoursEnd] = useState(
+    initialSettings?.office_hours_end?.substring(0, 5) || '18:00'
+  )
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
@@ -38,6 +44,8 @@ export default function PricingManagementClient({
         price_per_km: parseFloat(pricePerKm),
         driver_cost_per_ride: parseFloat(driverCost),
         office_time_price_multiplier: parseFloat(officeTimeMultiplier),
+        office_hours_start: officeHoursStart + ':00',
+        office_hours_end: officeHoursEnd + ':00',
       })
 
       if (result.success) {
@@ -191,6 +199,52 @@ export default function PricingManagementClient({
                 Multiplier applied during office hours (e.g., 1.5 = 50% increase)
               </p>
             </div>
+
+            {/* Office Hours Range */}
+            <div className="border-t border-gray-200 pt-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Office Hours Range</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="officeHoursStart"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    Start Time
+                  </label>
+                  <input
+                    type="time"
+                    id="officeHoursStart"
+                    value={officeHoursStart}
+                    onChange={(e) => setOfficeHoursStart(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Office hours start (24-hour format)</p>
+                </div>
+                <div>
+                  <label
+                    htmlFor="officeHoursEnd"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
+                    End Time
+                  </label>
+                  <input
+                    type="time"
+                    id="officeHoursEnd"
+                    value={officeHoursEnd}
+                    onChange={(e) => setOfficeHoursEnd(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Office hours end (24-hour format)</p>
+                </div>
+              </div>
+              <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-sm text-amber-800">
+                  <strong>Current Office Hours:</strong> {officeHoursStart} - {officeHoursEnd}
+                  <br />
+                  The price multiplier will be applied to rides booked during this time range.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Error Message */}
@@ -272,10 +326,14 @@ export default function PricingManagementClient({
             </svg>
             <div>
               <h3 className="text-sm font-semibold text-blue-900 mb-1">Pricing Information</h3>
-              <p className="text-sm text-blue-700">
+              <p className="text-sm text-blue-700 mb-2">
                 These settings control the base pricing for all rides. The final ride cost is calculated
                 using: (Distance × Price per KM) + Driver Cost + (Office Time Multiplier if applicable).
                 Petrol price is used for reference and future calculations.
+              </p>
+              <p className="text-sm text-blue-700">
+                <strong>Office Hours:</strong> The price multiplier is automatically applied to rides
+                requested during the configured office hours range. This helps manage demand during peak times.
               </p>
             </div>
           </div>

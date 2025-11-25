@@ -5,6 +5,8 @@ export interface PricingSettings {
   price_per_km: number
   driver_cost_per_ride: number
   office_time_price_multiplier: number
+  office_hours_start: string // Time in HH:MM:SS format
+  office_hours_end: string // Time in HH:MM:SS format
   updated_by?: string | null
   created_at: string
   updated_at: string
