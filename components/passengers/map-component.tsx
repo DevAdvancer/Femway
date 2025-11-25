@@ -66,7 +66,7 @@ export default function MapComponent({ pickup, dropoff, onMapClick }: MapCompone
     )
   }
 
-  const defaultCenter: [number, number] = [28.6139, 77.209] // Delhi, India
+  const defaultCenter: [number, number] = [22.738319997560012, 88.45661170360009] // Adamas University
   const center: [number, number] = pickup
     ? [pickup.lat, pickup.lng]
     : dropoff
