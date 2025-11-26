@@ -195,21 +195,24 @@ export async function bookRide(
       return { success: false, error: 'Failed to create ride request' }
     }
 
-    // Mark driver as unavailable
-    const { error: updateError } = await supabase
-      .from('driver_availability')
-      .update({
-        is_available: false,
-        current_ride_id: ride.id,
-        last_updated: new Date().toISOString(),
-      })
-      .eq('driver_id', booking.driver_id)
+    // Only mark driver as unavailable for immediate rides
+    // Scheduled rides don't block driver availability until accepted
+    if (!booking.is_scheduled) {
+      const { error: updateError } = await supabase
+        .from('driver_availability')
+        .update({
+          is_available: false,
+          current_ride_id: ride.id,
+          last_updated: new Date().toISOString(),
+        })
+        .eq('driver_id', booking.driver_id)
 
-    if (updateError) {
-      console.error('Error updating availability:', updateError)
-      // Rollback: delete the ride
-      await supabase.from('rides').delete().eq('id', ride.id)
-      return { success: false, error: 'Failed to book driver' }
+      if (updateError) {
+        console.error('Error updating availability:', updateError)
+        // Rollback: delete the ride
+        await supabase.from('rides').delete().eq('id', ride.id)
+        return { success: false, error: 'Failed to book driver' }
+      }
     }
 
     return { success: true, ride: ride as Ride }
@@ -285,16 +288,25 @@ export async function cancelRide(
       return { success: false, error: 'Failed to cancel ride' }
     }
 
-    // Make driver available again
+    // Make driver available again (only if this ride was blocking them)
     if (ride.driver_id) {
-      await supabase
+      const { data: availability } = await supabase
         .from('driver_availability')
-        .update({
-          is_available: true,
-          current_ride_id: null,
-          last_updated: new Date().toISOString(),
-        })
+        .select('current_ride_id')
         .eq('driver_id', ride.driver_id)
+        .single()
+
+      // Only update if this ride was blocking the driver
+      if (availability?.current_ride_id === rideId) {
+        await supabase
+          .from('driver_availability')
+          .update({
+            is_available: true,
+            current_ride_id: null,
+            last_updated: new Date().toISOString(),
+          })
+          .eq('driver_id', ride.driver_id)
+      }
     }
 
     return { success: true }

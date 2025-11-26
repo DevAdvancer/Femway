@@ -306,6 +306,19 @@ export async function acceptRide(rideId: string, driverId: string): Promise<{ su
   try {
     const supabase = await createClient()
 
+    // Get the ride details
+    const { data: ride, error: rideError } = await supabase
+      .from('rides')
+      .select('*')
+      .eq('id', rideId)
+      .eq('driver_id', driverId)
+      .eq('status', 'pending')
+      .single()
+
+    if (rideError || !ride) {
+      return { success: false, error: 'Ride not found or already accepted' }
+    }
+
     // Update ride status
     const { error: updateError } = await supabase
       .from('rides')
@@ -322,6 +335,16 @@ export async function acceptRide(rideId: string, driverId: string): Promise<{ su
       console.error('Error accepting ride:', updateError)
       return { success: false, error: 'Failed to accept ride' }
     }
+
+    // Mark driver as unavailable and link to current ride
+    await supabase
+      .from('driver_availability')
+      .update({
+        is_available: false,
+        current_ride_id: rideId,
+        last_updated: new Date().toISOString(),
+      })
+      .eq('driver_id', driverId)
 
     return { success: true }
   } catch (error) {
@@ -365,15 +388,25 @@ export async function rejectRide(rideId: string, driverId: string): Promise<{ su
       return { success: false, error: 'Failed to reject ride' }
     }
 
-    // Make driver available again
-    await supabase
+    // Make driver available again (only if they were marked unavailable)
+    // For scheduled rides, driver might still be available
+    const { data: availability } = await supabase
       .from('driver_availability')
-      .update({
-        is_available: true,
-        current_ride_id: null,
-        last_updated: new Date().toISOString(),
-      })
+      .select('current_ride_id')
       .eq('driver_id', driverId)
+      .single()
+
+    // Only update if this ride was blocking the driver
+    if (availability?.current_ride_id === rideId) {
+      await supabase
+        .from('driver_availability')
+        .update({
+          is_available: true,
+          current_ride_id: null,
+          last_updated: new Date().toISOString(),
+        })
+        .eq('driver_id', driverId)
+    }
 
     return { success: true }
   } catch (error) {
